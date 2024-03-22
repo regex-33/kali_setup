@@ -1,0 +1,195 @@
+---
+- name: Install useful tools
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/useful_tools"
+  tasks:
+    - name: Create directory for useful tools
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Change directory to useful tools
+      shell: cd "{{ tools_directory }}"
+
+    - name: Install getallurls (gau)
+      shell: |
+        go install github.com/lc/gau/v2/cmd/gau@latest > /dev/null 2>&1
+        ln -s ~/go/bin/gau /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print getallurls installation message
+      debug:
+        msg: "[USEFUL TOOLS] getallurls installation is done!"
+
+    - name: Install anti-burl
+      shell: |
+        go install github.com/tomnomnom/hacks/anti-burl@latest > /dev/null 2>&1
+        ln -s ~/go/bin/anti-burl /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print anti-burl installation message
+      debug:
+        msg: "[USEFUL TOOLS] anti-burl installation is done!"
+
+    - name: Install unfurl
+      shell: |
+        go install github.com/tomnomnom/unfurl@latest > /dev/null 2>&1
+        ln -s ~/go/bin/unfurl /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print unfurl installation message
+      debug:
+        msg: "[USEFUL TOOLS] unfurl installation is done!"
+
+    - name: Install anew
+      shell: |
+        go install github.com/tomnomnom/anew@latest > /dev/null 2>&1
+        ln -s ~/go/bin/anew /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print anew installation message
+      debug:
+        msg: "[USEFUL TOOLS] anew installation is done!"
+
+    - name: Install gron
+      shell: |
+        go install github.com/tomnomnom/gron@latest > /dev/null 2>&1
+        ln -s ~/go/bin/gron /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print gron installation message
+      debug:
+        msg: "[USEFUL TOOLS] gron installation is done!"
+
+    - name: Install qsreplace
+      shell: |
+        go install github.com/tomnomnom/qsreplace@latest > /dev/null 2>&1
+        ln -s ~/go/bin/qsreplace /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print qsreplace installation message
+      debug:
+        msg: "[USEFUL TOOLS] qsreplace installation is done!"
+
+    - name: Install Interlace
+      shell: |
+        git clone https://github.com/codingo/Interlace.git > /dev/null 2>&1
+        cd Interlace
+        python3 setup.py install > /dev/null 2>&1
+      args:
+        chdir: "{{ tools_directory }}"
+      ignore_errors: yes
+
+    - name: Print Interlace installation message
+      debug:
+        msg: "[USEFUL TOOLS] Interlace installation is done!"
+
+    - name: Install jq
+      apt:
+        name: jq
+        state: present
+      ignore_errors: yes
+
+    - name: Print jq installation message
+      debug:
+        msg: "[USEFUL TOOLS] jq installation is done!"
+
+    - name: Install Tmux
+      apt:
+        name: tmux
+        state: present
+      ignore_errors: yes
+
+    - name: Print Tmux installation message
+      debug:
+        msg: "[USEFUL TOOLS] Tmux installation is done!"
+
+    - name: Install Uro
+      pip:
+        name: uro
+      ignore_errors: yes
+
+    - name: Print Uro installation message
+      debug:
+        msg: "[USEFUL TOOLS] Uro installation is done!"
+
+    - name: Install gf
+      shell: |
+        go get -u github.com/tomnomnom/gf > /dev/null 2>&1
+        ln -s ~/go/bin/gf /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print gf installation message
+      debug:
+        msg: "[USEFUL TOOLS] gf installation is done!"
+
+    - name: Install httprobe
+      shell: |
+        go get github.com/tomnomnom/httprobe > /dev/null 2>&1
+        ln -s ~/go/bin/httprobe /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print httprobe installation message
+      debug:
+        msg: "[USEFUL TOOLS] httprobe installation is done!"
+
+    - name: Install httpx
+      shell: |
+        go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest > /dev/null 2>&1
+        ln -s ~/go/bin/httpx /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print httpx installation message
+      debug:
+        msg: "[USEFUL TOOLS] httpx installation is done!"
+
+    - name: Install waybackurls
+      shell: |
+        go install github.com/tomnomnom/waybackurls@latest > /dev/null 2>&1
+        ln -s ~/go/bin/waybackurls /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print waybackurls installation message
+      debug:
+        msg: "[USEFUL TOOLS] waybackurls installation is done!"
+
+    - name: Install arjun
+      pip:
+        name: arjun
+      ignore_errors: yes
+
+    - name: Print arjun installation message
+      debug:
+        msg: "[USEFUL TOOLS] arjun installation is done!"
+
+    - name: Install socialhunter
+      shell: |
+        go install github.com/utkusen/socialhunter@latest > /dev/null 2>&1
+        ln -s ~/go/bin/socialhunter /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print socialhunter installation message
+      debug:
+        msg: "[USEFUL TOOLS] socialhunter installation is done!"
+
+    - name: Install gau
+      shell: |
+        go install github.com/lc/gau/v2/cmd/gau@latest > /dev/null 2>&1
+        ln -s ~/go/bin/gau /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print gau installation message
+      debug:
+        msg: "[USEFUL TOOLS] gau installation is done!"
+
+    - name: Install Socialhunter
+      shell: |
+        go install github.com/utkusen/socialhunter@latest > /dev/null 2>&1
+        ln -s ~/go/bin/socialhunter /usr/local/bin/
+      ignore_errors: yes
+
+    - name: Print Socialhunter installation message
+      debug:
+        msg: "[USEFUL TOOLS] Socialhunter installation is done!"

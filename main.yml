@@ -1,0 +1,148 @@
+---
+- name: Install Bug Bounty Tools
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include API Tools role
+      include_role:
+        name: roles/web_tools/api_tools
+      tags:
+        - web
+
+    - name: Include Bypass 40X role
+      include_role:
+        name: roles/web_tools/bypass_40X
+      tags:
+        - web
+
+    - name: Include Xss Tools Tools role
+      include_role:
+        name: roles/web_tools/xss_tools
+      tags:
+        - web
+
+    - name: Include HTTP Parameter Tools role
+      include_role:
+        name: roles/web_tools/http_parameter
+      tags:
+        - web
+
+    - name: Include Sensitive Finding Tools role
+      include_role:
+        name: roles/web_tools/sensitive_finding
+      tags:
+        - web
+
+    - name: Include Useful Tools role
+      include_role:
+        name: roles/web_tools/useful
+      tags:
+        - web
+
+    - name: Include CMS Scanners role
+      include_role:
+        name: roles/web_tools/cms_scanners
+      tags:
+        - web
+
+    - name: Include HTTP Probe Tools role
+      include_role:
+        name: roles/web_tools/http_probe
+      tags:
+        - web
+
+    - name: Include SQL Injection Tools role
+      include_role:
+        name: roles/web_tools/sqli_tools
+      tags:
+        - web
+
+    - name: Include Web Crawling Tools role
+      include_role:
+        name: roles/web_tools/web_crawling
+      tags:
+        - web
+
+    - name: Include CORS Tools role
+      include_role:
+        name: roles/web_tools/cors_tools
+      tags:
+        - web
+
+    - name: Include JS Hunting Tools role
+      include_role:
+        name: roles/web_tools/js_hunting
+      tags:
+        - web
+
+    - name: Include GIT Hunting Tools role
+      include_role:
+        name: roles/web_tools/git_hunting
+      tags:
+        - web
+
+    - name: Include SSRF Tools role
+      include_role:
+        name: roles/web_tools/ssrf_tools
+      tags:
+        - web
+
+    - name: Include Wordlist role
+      include_role:
+        name: roles/web_tools/wordlist
+      tags:
+        - web
+
+    - name: Include DNS Resolver Tools role
+      include_role:
+        name: roles/web_tools/dns_resolver
+      tags:
+        - web
+
+    - name: Include LFI Tools role
+      include_role:
+        name: roles/web_tools/lfi_tools
+      tags:
+        - web
+
+    - name: Include SSTI Tools role
+      include_role:
+        name: roles/web_tools/ssti_tools
+      tags:
+        - web
+
+    - name: Include Fuzzing Tools role
+      include_role:
+        name: roles/web_tools/fuzzing_tools
+      tags:
+        - web
+
+    - name: Include Network Scanner Tools role
+      include_role:
+        name: roles/web_tools/network_scanner
+      tags:
+        - web
+
+    - name: Include Subdomains Enumeration Tools role
+      include_role:
+        name: roles/web_tools/subdomains_enum
+      tags:
+        - web
+
+    - name: Include Prototype Pollution Tools role
+      include_role:
+        name: roles/web_tools/prototype_pollution
+      tags:
+        - web
+
+    - name: Include Subdomain Takeover Tools role
+      include_role:
+        name: roles/web_tools/subdomain_takeover
+      tags:
+        - web
+
+    - name: Include Windows Tools role
+      include_role:
+        name: roles/windows_tools
+      tags:
+        - windows

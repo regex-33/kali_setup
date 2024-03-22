@@ -1,0 +1,27 @@
+---
+- name: Subdomain Takeover
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/subdomain_takeover"
+  tasks:
+    - name: Create directory for Subdomain Takeover
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install SubOver
+      shell: |
+        go get -v github.com/Ice3man543/SubOver
+        ln -s ~/go/bin/subover /usr/local/bin/subover
+      args:
+        executable: /bin/bash
+      register: subover_installed
+      changed_when: subover_installed.rc == 0
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "SubOver installed successfully!"
+          when: subover_installed.changed

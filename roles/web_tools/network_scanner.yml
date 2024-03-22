@@ -1,0 +1,58 @@
+---
+- name: Network Scanner
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/network_scanner"
+  tasks:
+    - name: Create directory for Network Scanner
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install Masscan
+      block:
+        - name: Clone Masscan repository
+          git:
+            repo: https://github.com/robertdavidgraham/masscan
+            dest: "{{ tools_directory }}/masscan"
+
+        - name: Build and Install Masscan
+          shell: |
+            cd {{ tools_directory }}/masscan
+            make
+            make install
+          register: masscan_installed
+          changed_when: masscan_installed.rc == 0
+
+      register: masscan_installed_block
+      when: masscan_installed_block.changed
+
+    - name: Install Naabu
+      shell: |
+        go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+        ln -s ~/go/bin/naabu /usr/local/bin/naabu
+      args:
+        executable: /bin/bash
+      register: naabu_installed
+      changed_when: naabu_installed.rc == 0
+
+    - name: Install Smap
+      shell: |
+        go install -v github.com/s0md3v/smap/cmd/smap@latest
+        ln -s ~/go/bin/smap /usr/local/bin/smap
+      args:
+        executable: /bin/bash
+      register: smap_installed
+      changed_when: smap_installed.rc == 0
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "Masscan installed successfully!"
+          when: masscan_installed_block.changed
+        - msg: "Naabu installed successfully!"
+          when: naabu_installed.changed
+        - msg: "Smap installed successfully!"
+          when: smap_installed.changed

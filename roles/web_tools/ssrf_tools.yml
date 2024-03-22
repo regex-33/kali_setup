@@ -1,0 +1,84 @@
+---
+- name: SSRF Tools
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/ssrf_tools"
+  tasks:
+    - name: Create directory for SSRF Tools
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install SSRFmap
+      block:
+        - name: Clone SSRFmap repository
+          git:
+            repo: https://github.com/swisskyrepo/SSRFmap
+            dest: "{{ tools_directory }}/SSRFmap"
+
+        - name: Install SSRFmap dependencies
+          pip:
+            requirements: "{{ tools_directory }}/SSRFmap/requirements.txt"
+            executable: pip3
+          register: ssrfmap_installed_deps
+
+      register: ssrfmap_installed_block
+      when: ssrfmap_installed_block.changed
+
+    - name: Install Gopherus
+      block:
+        - name: Clone Gopherus repository
+          git:
+            repo: https://github.com/tarunkant/Gopherus.git
+            dest: "{{ tools_directory }}/Gopherus"
+
+        - name: Install Gopherus
+          shell: |
+            chmod +x install.sh
+            ./install.sh
+          args:
+            chdir: "{{ tools_directory }}/Gopherus"
+          register: gopherus_installed
+          changed_when: gopherus_installed.rc == 0
+
+      register: gopherus_installed_block
+      when: gopherus_installed_block.changed
+
+    - name: Install Interactsh
+      shell: |
+        go install -v github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest
+        ln -s ~/go/bin/interactsh-client /usr/local/bin/interactsh-client
+      args:
+        executable: /bin/bash
+      register: interactsh_installed
+      changed_when: interactsh_installed.rc == 0
+
+    - name: Install AutoSSRF
+      block:
+        - name: Clone AutoSSRF repository
+          git:
+            repo: https://github.com/Th0h0/autossrf.git
+            dest: "{{ tools_directory }}/autossrf"
+
+        - name: Install AutoSSRF dependencies
+          pip:
+            requirements: "{{ tools_directory }}/autossrf/requirements.txt"
+            executable: pip3
+          register: autossrf_installed_deps
+
+      register: autossrf_installed_block
+      when: autossrf_installed_block.changed
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "SSRFmap installed successfully!"
+          when: ssrfmap_installed_block.changed
+        - msg: "Gopherus installed successfully!"
+          when: gopherus_installed_block.changed
+        - msg: "Interactsh installed successfully!"
+          when: interactsh_installed.changed
+        - msg: "AutoSSRF installed successfully!"
+          when: autossrf_installed_block.changed

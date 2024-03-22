@@ -1,0 +1,34 @@
+---
+- name: SSTI Tools
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/ssti_tools"
+  tasks:
+    - name: Create directory for SSTI Tools
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install tplmap
+      block:
+        - name: Clone tplmap repository
+          git:
+            repo: https://github.com/epinna/tplmap.git
+            dest: "{{ tools_directory }}/tplmap"
+
+        - name: Install tplmap dependencies
+          pip:
+            requirements: "{{ tools_directory }}/tplmap/requirements.txt"
+            executable: pip3
+          register: tplmap_installed_deps
+
+      register: tplmap_installed_block
+      when: tplmap_installed_block.changed
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "tplmap installed successfully!"
+          when: tplmap_installed_block.changed

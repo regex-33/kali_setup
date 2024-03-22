@@ -1,0 +1,101 @@
+- name: XSS Tools Installation
+  hosts: localhost
+  tasks:
+    - name: Create directory for XSS tools
+      file:
+        path: /opt/bug_bounty/xss_tools
+        state: directory
+
+    - name: Install Dalfox
+      block:
+        - name: Dalfox Installation
+          command: "go install github.com/hahwul/dalfox/v2@latest"
+          args:
+            chdir: /opt/bug_bounty/xss_tools
+          ignore_errors: yes
+          register: dalfox_installation
+        - name: Create symbolic link for Dalfox
+          command: "ln -s ~/go/bin/dalfox /usr/local/bin/"
+          when: dalfox_installation is succeeded
+        - name: Display Dalfox installation status
+          debug:
+            msg: "Dalfox installation is done!"
+          when: dalfox_installation is succeeded
+
+    - name: Install XSStrike
+      block:
+        - name: Clone XSStrike repository
+          git:
+            repo: https://github.com/s0md3v/XSStrike
+            dest: /opt/bug_bounty/xss_tools/XSStrike
+            depth: 1
+          register: xss_trike_clone
+        - name: Install XSStrike requirements
+          pip:
+            requirements: /opt/bug_bounty/xss_tools/XSStrike/requirements.txt
+          when: xss_trike_clone.changed
+        - name: Display XSStrike installation status
+          debug:
+            msg: "XSStrike installation is done!"
+          when: xss_trike_clone.changed
+
+    - name: Install kxss
+      block:
+        - name: Install kxss
+          command: "go install github.com/tomnomnom/hacks/kxss@latest"
+          args:
+            chdir: /opt/bug_bounty/xss_tools
+          ignore_errors: yes
+          register: kxss_installation
+        - name: Create symbolic link for kxss
+          command: "ln -s ~/go/bin/kxss /usr/local/bin/"
+          when: kxss_installation is succeeded
+        - name: Display kxss installation status
+          debug:
+            msg: "kxss installation is done!"
+          when: kxss_installation is succeeded
+
+    - name: Install XSS-Loader
+      block:
+        - name: Clone XSS-Loader repository
+          git:
+            repo: https://github.com/capture0x/XSS-LOADER/
+            dest: /opt/bug_bounty/xss_tools/XSS-LOADER
+            depth: 1
+          register: xss_loader_clone
+        - name: Install XSS-Loader requirements
+          pip:
+            requirements: /opt/bug_bounty/xss_tools/XSS-LOADER/requirements.txt
+          when: xss_loader_clone.changed
+        - name: Display XSS-Loader installation status
+          debug:
+            msg: "XSS-Loader installed."
+          when: xss_loader_clone.changed
+
+    - name: Install Freq
+      block:
+        - name: Install Freq
+          command: "go install github.com/takshal/freq@latest"
+          args:
+            chdir: /opt/bug_bounty/xss_tools
+          ignore_errors: yes
+          register: freq_installation
+        - name: Create symbolic link for Freq
+          command: "ln -s ~/go/bin/freq /usr/local/bin/"
+          when: freq_installation is succeeded
+        - name: Display Freq installation status
+          debug:
+            msg: "Freq installed."
+          when: freq_installation is succeeded
+
+    - name: Install Gxss
+      block:
+        - name: Install Gxss
+          command: "go install github.com/KathanP19/Gxss@latest"
+          args:
+            chdir: /opt/bug_bounty/xss_tools
+          ignore_errors: yes
+          register: gxss_installation
+        - name: Create symbolic link for Gxss
+          command: "ln -s ~/go/bin/Gxss /usr/local/bin/"
+          when: gxss_i

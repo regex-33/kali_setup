@@ -1,0 +1,39 @@
+---
+- name: HTTP Parameter Discovery
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/http_parameter"
+  tasks:
+    - name: Create directory for HTTP Parameter Discovery
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install Arjun
+      pip:
+        name: arjun
+        executable: pip3
+        state: present
+      register: arjun_installed
+
+    - name: Install x8
+      shell: |
+        cd /tmp
+        wget https://github.com/Sh1Yo/x8/releases/download/v{{ X8VER }}/x86_64-linux-x8.gz
+        gzip -d x86_64-linux-x8.gz
+        chmod +x x86_64-linux-x8
+        mv x86_64-linux-x8 /usr/local/bin/x8
+      args:
+        executable: /bin/bash
+      register: x8_installed
+      changed_when: x8_installed.rc == 0
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "Arjun installed successfully!"
+          when: arjun_installed.changed
+        - msg: "x8 installed successfully!"
+          when: x8_installed.changed

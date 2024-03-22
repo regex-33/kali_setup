@@ -1,0 +1,48 @@
+---
+- name: Prototype Pollution
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/proto_pollution"
+  tasks:
+    - name: Create directory for Prototype Pollution
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install ppfuzz
+      shell: |
+        cd /tmp
+        wget https://github.com/dwisiswant0/ppfuzz/releases/download/v{{ PPFUZZVER }}/ppfuzz-v{{ PPFUZZVER }}-x86_64-unknown-linux-musl.tar.gz
+        tar -zxvf ppfuzz-v{{ PPFUZZVER }}-x86_64-unknown-linux-musl.tar.gz
+        mv ppfuzz /usr/local/bin/ppfuzz
+      args:
+        executable: /bin/bash
+      register: ppfuzz_installed
+      changed_when: ppfuzz_installed.rc == 0
+
+    - name: Install ppmap
+      block:
+        - name: Clone ppmap repository
+          git:
+            repo: https://github.com/kleiton0x00/ppmap.git
+            dest: "{{ tools_directory }}/ppmap"
+
+        - name: Setup ppmap
+          shell: bash setup.sh
+          args:
+            chdir: "{{ tools_directory }}/ppmap"
+          register: ppmap_installed
+          changed_when: ppmap_installed.rc == 0
+
+      register: ppmap_installed_block
+      when: ppmap_installed_block.changed
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "ppfuzz installed successfully!"
+          when: ppfuzz_installed.changed
+        - msg: "ppmap installed successfully!"
+          when: ppmap_installed_block.changed

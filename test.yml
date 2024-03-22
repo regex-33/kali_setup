@@ -1,0 +1,61 @@
+---
+- name: Install Webpaste and its extension for Firefox
+  hosts: localhost
+  gather_facts: no
+  vars:
+    download_dir: "~/Downloads"
+    webpaste_token: "iloveweb"
+    webpaste_port: "8080"
+    extension_server: "http://localhost:8080"
+    snippets:
+      - name: "Google URLs"
+        code: "[...document.querySelectorAll('div.r>a:first-child')].map(n=>n.href)"
+        onsuccess: "document.location=document.querySelectorAll('a#pnnext')[0].href;"
+      - name: "GitHub Code Results"
+        code: "[...document.querySelectorAll('#code_search_results a.text-bold')].map(n=>n.href)"
+        onsuccess: "document.location=document.querySelectorAll('a.next_page')[0].href;"
+  tasks:
+    - name: Ensure download directory exists
+      ansible.builtin.file:
+        path: "{{ download_dir }}"
+        state: directory
+
+    - name: Clone hacks repo
+      git:
+        repo: https://github.com/regex-33/webpast
+        dest: "{{ download_dir }}/webpaste"
+
+    - name: Build webpaste binary
+      shell: "cd {{ download_dir }}/webpaste && go build"
+
+    - name: Set environment variable
+      ansible.builtin.shell:
+        cmd: "export WEBPASTE_TOKEN={{ webpaste_token }}"
+
+    - name: Load extension in Firefox
+      ansible.builtin.command: "firefox -new-tab 'about:debugging#/runtime/this-firefox'"
+
+    - name: Wait for user to manually load extension in Firefox
+      pause:
+        prompt: "Please load the Webpaste extension manually in Firefox. Once done, press Enter to continue."
+
+    - name: Configure extension options
+      ansible.builtin.replace:
+        path: "{{ download_dir }}/webpaste/extension/options.js"
+        regexp: '"server": "(.*)"'
+        replace: '"server": "{{ extension_server }}"'
+
+    - name: Save snippets to file
+      ansible.builtin.copy:
+        content: "{{ snippets | to_json }}"
+        dest: "{{ download_dir }}/webpaste/extension/snippets.json"
+
+    - name: Run webpaste binary
+      ansible.builtin.command: "{{ download_dir }}/webpaste/webpaste -p {{ webpaste_port }}"
+
+    - name: Wait for user input to continue
+      pause:
+        prompt: "Press Enter after you've executed the webpaste binary and configured the extension in Firefox."
+
+    # Additional tasks can be added for further automation or verification
+

@@ -1,0 +1,136 @@
+---
+- name: Subdomains Enumeration
+  hosts: localhost
+  become: yes
+  vars:
+    subfinder_version: "v2.4.6"  # Update with the latest version
+    findomain_version: "4.1.1"   # Update with the latest version
+    amass_version: "3.14.2"      # Update with the latest version
+  tasks:
+    - name: Create directory for subdomain enumeration
+      file:
+        path: /opt/bug_bounty/subdomains_enum
+        state: directory
+
+    - name: Install Subfinder
+      shell: |
+        go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@{{ subfinder_version }}
+        ln -s ~/go/bin/subfinder /usr/local/bin/subfinder
+      args:
+        executable: /bin/bash
+      register: subfinder_installed
+      changed_when: subfinder_installed.rc == 0
+
+    - name: Install Assetfinder
+      shell: |
+        go install github.com/tomnomnom/assetfinder@latest
+        ln -s ~/go/bin/assetfinder /usr/local/bin/assetfinder
+      args:
+        executable: /bin/bash
+      register: assetfinder_installed
+      changed_when: assetfinder_installed.rc == 0
+
+    - name: Install Findomain
+      shell: |
+        cd /tmp && wget https://github.com/Edu4rdSHL/findomain/releases/download/{{ findomain_version }}/findomain-linux.zip
+        unzip findomain-linux.zip
+        chmod +x findomain && mv ./findomain /usr/local/bin/findomain
+      args:
+        executable: /bin/bash
+      register: findomain_installed
+      changed_when: findomain_installed.rc == 0
+
+    - name: Install Github-subdomains
+      shell: |
+        go install github.com/gwen001/github-subdomains@latest
+        ln -s ~/go/bin/github-subdomains /usr/local/bin/github-subdomains
+      args:
+        executable: /bin/bash
+      register: github_subdomains_installed
+      changed_when: github_subdomains_installed.rc == 0
+
+    - name: Install Gitlab-subdomains
+      shell: |
+        go install github.com/gwen001/gitlab-subdomains@latest
+        ln -s ~/go/bin/gitlab-subdomains /usr/local/bin/gitlab-subdomains
+      args:
+        executable: /bin/bash
+      register: gitlab_subdomains_installed
+      changed_when: gitlab_subdomains_installed.rc == 0
+
+    - name: Install Amass
+      shell: |
+        cd /tmp && wget https://github.com/OWASP/Amass/releases/download/{{ amass_version }}/amass_linux_amd64.zip
+        unzip amass_linux_amd64.zip
+        mv amass_linux_amd64/amass /usr/local/bin/amass
+      args:
+        executable: /bin/bash
+      register: amass_installed
+      changed_when: amass_installed.rc == 0
+
+    - name: Install Crobat
+      shell: |
+        go install github.com/cgboal/sonarsearch/cmd/crobat@latest
+        ln -s ~/go/bin/crobat /usr/local/bin/crobat
+      args:
+        executable: /bin/bash
+      register: crobat_installed
+      changed_when: crobat_installed.rc == 0
+
+    - name: Install Sublist3r
+      block:
+        - name: Clone Sublist3r repository
+          git:
+            repo: https://github.com/aboul3la/Sublist3r.git
+            dest: ~/tools/Sublist3r
+            version: master
+      become: yes
+      register: sublist3r_installed
+      changed_when: sublist3r_installed.changed
+
+    - name: Install Crtndstry
+      block:
+        - name: Clone Crtndstry repository
+          git:
+            repo: https://github.com/nahamsec/crtndstry.git
+            dest: ~/tools/crtndstry
+            version: master
+      become: yes
+      register: crtndstry_installed
+      changed_when: crtndstry_installed.changed
+
+    - name: Install LazyRecon
+      block:
+        - name: Clone LazyRecon repository
+          git:
+            repo: https://github.com/nahamsec/lazyrecon.git
+            dest: ~/tools/lazyrecon
+            version: master
+      become: yes
+      register: lazyrecon_installed
+      changed_when: lazyrecon_installed.changed
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "Subfinder installed successfully!"
+          when: subfinder_installed.changed
+        - msg: "Assetfinder installed successfully!"
+          when: assetfinder_installed.changed
+        - msg: "Findomain installed successfully!"
+          when: findomain_installed.changed
+        - msg: "Github-subdomains installed successfully!"
+          when: github_subdomains_installed.changed
+        - msg: "Gitlab-subdomains installed successfully!"
+          when: gitlab_subdomains_installed.changed
+        - msg: "Amass installed successfully!"
+          when: amass_installed.changed
+        - msg: "Crobat installed successfully!"
+          when: crobat_installed.changed
+        - msg: "Sublist3r cloned successfully!"
+          when: sublist3r_installed.changed
+        - msg: "Crtndstry cloned successfully!"
+          when: crtndstry_installed.changed
+        - msg: "LazyRecon cloned successfully!"
+          when: lazyrecon_installed.changed

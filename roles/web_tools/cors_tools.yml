@@ -1,0 +1,43 @@
+---
+- name: CORS Tools
+  hosts: localhost
+  become: yes
+  vars:
+    tools_directory: "/opt/bug_bounty/cors_tools"
+  tasks:
+    - name: Create directory for CORS Tools
+      file:
+        path: "{{ tools_directory }}"
+        state: directory
+
+    - name: Install Corsy
+      block:
+        - name: Clone Corsy repository
+          git:
+            repo: https://github.com/s0md3v/Corsy.git
+            dest: "{{ tools_directory }}/Corsy"
+
+        - name: Install Corsy dependencies
+          pip:
+            requirements: "{{ tools_directory }}/Corsy/requirements.txt"
+            executable: pip3
+          register: corsy_installed_deps
+
+      register: corsy_installed_block
+      when: corsy_installed_block.changed
+
+    - name: Install CORScanner
+      pip:
+        name: corscanner
+        executable: pip
+        state: present
+      register: corscanner_installed
+
+    - name: Print status
+      debug:
+        msg: "{{ item.msg }}"
+      loop:
+        - msg: "Corsy installed successfully!"
+          when: corsy_installed_block.changed
+        - msg: "CORScanner installed successfully!"
+          when: corscanner_installed.changed

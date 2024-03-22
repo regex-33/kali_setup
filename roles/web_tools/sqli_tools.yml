@@ -1,0 +1,41 @@
+- name: SQL Injection Tools Installation
+  hosts: localhost
+  tasks:
+    - name: Create directory for SQL injection tools
+      file:
+        path: /opt/bug_bounty/sqli_tools
+        state: directory
+
+    - name: Install NoSQLMap
+      block:
+        - name: Clone NoSQLMap repository
+          git:
+            repo: https://github.com/codingo/NoSQLMap.git
+            dest: /opt/bug_bounty/sqli_tools/NoSQLMap
+            depth: 1
+          register: nosqlmap_clone
+        - name: Install NoSQLMap
+          command: "python setup.py install"
+          args:
+            chdir: /opt/bug_bounty/sqli_tools/NoSQLMap
+          when: nosqlmap_clone.changed
+        - name: Display NoSQLMap installation status
+          debug:
+            msg: "NoSQLMap installation is done!"
+          when: nosqlmap_clone.changed
+
+    - name: Install Jeeves
+      block:
+        - name: Install Jeeves
+          command: "go get -u github.com/ferreiraklet/Jeeves"
+          args:
+            chdir: /opt/bug_bounty/sqli_tools
+          ignore_errors: yes
+          register: jeeves_installation
+        - name: Create symbolic link for Jeeves
+          command: "ln -s ~/go/bin/jeeves /usr/local/bin/"
+          when: jeeves_installation is succeeded
+        - name: Display Jeeves installation status
+          debug:
+            msg: "Jeeves installed."
+          when: jeeves_installation is succeeded
