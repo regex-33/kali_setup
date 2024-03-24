@@ -1,0 +1,79 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/http_probe"
+- name: Create directory for JS Files Hunting
+  file:
+    path: "{{ tools_directory }}"
+    state: directory
+
+- name: Clone Linkfinder repository
+  git:
+    repo: https://github.com/GerbenJavado/LinkFinder.git
+    dest: "{{ tools_directory }}/LinkFinder"
+
+- name: Install Linkfinder dependencies
+  pip:
+    requirements: "{{ tools_directory }}/LinkFinder/requirements.txt"
+    executable: pip3
+  register: linkfinder_installed_deps
+
+- name: Install Linkfinder
+  shell: python3 setup.py install
+  args:
+    chdir: "{{ tools_directory }}/LinkFinder"
+  register: linkfinder_installed
+  changed_when: linkfinder_installed.rc == 0
+
+  register: linkfinder_installed_block
+  when: linkfinder_installed_block.changed
+
+- name: Clone SecretFinder repository
+  git:
+    repo: https://github.com/m4ll0k/SecretFinder.git
+    dest: "{{ tools_directory }}/SecretFinder"
+
+- name: Install SecretFinder dependencies
+  pip:
+    requirements: "{{ tools_directory }}/SecretFinder/requirements.txt"
+    executable: pip3
+  register: secretfinder_installed_deps
+
+  register: secretfinder_installed_block
+  when: secretfinder_installed_block.changed
+
+- name: Install subjs
+  shell: |
+    go install github.com/lc/subjs@latest
+    ln -s ~/go/bin/subjs /usr/local/bin/subjs
+  args:
+    executable: /bin/bash
+  register: subjs_installed
+  changed_when: subjs_installed.rc == 0
+
+- name: Clone xnLinkFinder repository
+  git:
+    repo: https://github.com/xnl-h4ck3r/xnLinkFinder.git
+    dest: "{{ tools_directory }}/xnLinkFinder"
+
+- name: Install xnLinkFinder
+  shell: python3 setup.py install
+  args:
+    chdir: "{{ tools_directory }}/xnLinkFinder"
+  register: xnlinkfinder_installed
+  changed_when: xnlinkfinder_installed.rc == 0
+
+  register: xnlinkfinder_installed_block
+  when: xnlinkfinder_installed_block.changed
+
+- name: Print status
+  debug:
+    msg: "{{ item.msg }}"
+  loop:
+    - msg: "Linkfinder installed successfully!"
+      when: linkfinder_installed_block.changed
+    - msg: "SecretFinder installed successfully!"
+      when: secretfinder_installed_block.changed
+    - msg: "subjs installed successfully!"
+      when: subjs_installed.changed
+    - msg: "xnLinkFinder installed successfully!"
+      when: xnlinkfinder_installed_block.changed

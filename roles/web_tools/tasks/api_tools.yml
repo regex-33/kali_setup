@@ -1,0 +1,41 @@
+---
+- name: Create directory for API Tools
+  ansible.builtin.file:
+    path: "/opt/bug_bounty/api_tools"
+    state: directory
+
+- name: Download Kiterunner binary
+  ansible.builtin.get_url:
+    url: "https://github.com/assetnote/kiterunner/releases/download/v1.0.2/kiterunner_1.0.2_linux_amd64.tar.gz"
+    dest: "/tmp/kiterunner_1.0.2_linux_amd64.tar.gz"
+
+- name: Extract Kiterunner
+  ansible.builtin.unarchive:
+    src: "/tmp/kiterunner_1.0.2_linux_amd64.tar.gz"
+    dest: "/opt/bug_bounty/api_tools"
+    remote_src: yes
+
+- name: Create directory for Kiterunner wordlists
+  ansible.builtin.file:
+    path: "/opt/bug_bounty/api_tools/kiterunner-wordlists"
+    state: directory
+
+- name: Download Kiterunner wordlists
+  ansible.builtin.get_url:
+    url: "https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz"
+    dest: "/opt/bug_bounty/api_tools/kiterunner-wordlists/routes-large.kite.tar.gz"
+
+- name: Download Kiterunner wordlists
+  ansible.builtin.get_url:
+    url: "https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz"
+    dest: "/opt/bug_bounty/api_tools/kiterunner-wordlists/routes-small.kite.tar.gz"
+
+- name: Extract Kiterunner wordlists
+  ansible.builtin.shell:
+    cmd: "tar -zxvf /opt/bug_bounty/api_tools/kiterunner-wordlists/routes-large.kite.tar.gz -C /opt/bug_bounty/api_tools/kiterunner-wordlists && tar -zxvf /opt/bug_bounty/api_tools/kiterunner-wordlists/routes-small.kite.tar.gz -C /opt/bug_bounty/api_tools/kiterunner-wordlists"
+  register: kiterunner_extracted
+
+- name: Print status
+  ansible.builtin.debug:
+    msg: "Kiterunner installed successfully!"
+  when: kiterunner_extracted is changed

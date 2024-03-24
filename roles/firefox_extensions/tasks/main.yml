@@ -1,0 +1,150 @@
+---
+    - name: Download Hackbar extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/latest/hackbar/addon-67890-latest.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/hackbar.xpi"
+
+    - name: Install Hackbar extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/hackbar.xpi"
+#Twp
+    - name: Download TWP extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4245500/traduzir_paginas_web-10.0.1.1.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/twp.xpi"
+
+    - name: Install TWP extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/twp.xpi"
+
+#Shodan
+
+    - name: Download Shodan extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4117305/shodan_addon-1.1.1.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/shodan.xpi"
+
+    - name: Install Shodan extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/shodan.xpi"
+
+#Foxyproxy
+
+    - name: Download Foxyproxy extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4228675/foxyproxy_basic-8.9.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/foxyproxy.xpi"
+
+    - name: Install Foxyproxy extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/foxyproxy.xpi"
+
+#Trufflehog
+
+    - name: Download Trufflehog extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4035826/trufflehog-0.0.1.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/Trufflehog.xpi"
+
+    - name: Install Trufflehog extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/Trufflehog.xpi"
+
+#knoxss_community_edition
+
+    - name: Download knoxss_community_edition extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/3378216/knoxss_community_edition-0.2.0.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/knoxss_community_edition.xpi"
+
+    - name: Install knoxss_community_edition extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/knoxss_community_edition.xpi"
+
+#DotGit
+
+    - name: Download dotgit extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4169848/dotgit-4.8.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/dotgit.xpi"
+
+    - name: Install dotgit extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/dotgit.xpi"
+
+#ModHeader
+
+    - name: Download modheader extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4161194/modheader_firefox-4.4.1.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/modheader.xpi"
+
+    - name: Install modheader extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/modheader.xpi"
+
+#HackTools
+
+    - name: Download HackTools extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/3901885/hacktools-0.4.0.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/hacktools.xpi"
+
+    - name: Install HackTools extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/hacktools.xpi"
+
+#Open Multiple URLs
+
+    - name: Download open_multiple_urls extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4201128/open_multiple_urls-1.6.0.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/open_multiple_urls.xpi"
+
+    - name: Install open_multiple_urls extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/open_multiple_urls.xpi"
+
+#Cookie-Editor
+
+    - name: Download Cookie-Editor extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4241002/cookie_editor-1.13.0.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/cookie_editor.xpi"
+
+    - name: Install Cookie-Editor extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/cookie_editor.xpi"
+
+#Bishop Vulnerability Scanner
+
+    - name: Download vulners_web_scanner extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/817904/vulners_web_scanner-1.0.6.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/vulners_web_scanner.xpi"
+
+    - name: Install vulners_web_scanner extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/vulners_web_scanner.xpi"
+
+#retire js
+
+    - name: Download retire_js extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4250269/retire_js-2.0.0.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/retire_js.xpi"
+
+    - name: Install retire_js extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/retire_js.xpi"
+
+#darkreader
+
+    - name: Download darkreader extension
+      get_url:
+        url: "https://addons.mozilla.org/firefox/downloads/file/4249607/darkreader-4.9.80.xpi"
+        dest: "{{ lookup('env', 'HOME') }}/Downloads/darkreader.xpi"
+
+    - name: Install darkreader extension
+      ansible.builtin.shell:
+        cmd: "firefox --new-instance {{ lookup('env', 'HOME') }}/Downloads/darkreader.xpi"

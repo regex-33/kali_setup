@@ -1,0 +1,31 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/wordlists"
+
+- name: Create directory for wordlists
+  file:
+    path: /opt/bug_bounty/wordlists
+    state: directory
+
+- name: Change directory to wordlists
+  shell: cd /opt/bug_bounty/wordlists
+
+- name: Install SecLists
+  shell: git clone https://github.com/danielmiessler/SecLists.git > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print SecLists installation message
+  debug:
+    msg: "[WORDLISTS] SecLists installation is done!"
+
+- name: Install OneListForAll
+  shell: git clone https://github.com/six2dez/OneListForAll.git > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print OneListForAll installation message
+  debug:
+    msg: "[WORDLISTS] OneListForAll installation is done!"

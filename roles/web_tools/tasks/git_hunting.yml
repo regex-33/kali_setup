@@ -1,0 +1,55 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/git_hunting"
+
+- name: Create directory for Git hunting tools
+  file:
+    path: /opt/bug_bounty/git_hunting
+    state: directory
+
+- name: Change directory to Git hunting tools
+  shell: cd /opt/bug_bounty/git_hunting
+
+- name: Install GitDorker
+  shell: |
+    git clone https://github.com/obheda12/GitDorker.git > /dev/null 2>&1
+    cd GitDorker
+    pip3 install -r requirements.txt > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print GitDorker installation message
+  debug:
+    msg: "[GIT HUNTING] GitDorker installation is done!"
+
+- name: Install gitGraber
+  shell: |
+    git clone https://github.com/hisxo/gitGraber.git > /dev/null 2>&1
+    cd gitGraber
+    pip3 install -r requirements.txt > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print gitGraber installation message
+  debug:
+    msg: "[GIT HUNTING] gitGraber installation is done!"
+
+- name: Install GitHacker
+  shell: pip3 install GitHacker > /dev/null 2>&1
+  ignore_errors: yes
+
+- name: Print GitHacker installation message
+  debug:
+    msg: "[GIT HUNTING] GitHacker installation is done!"
+
+- name: Install GitTools
+  shell: git clone https://github.com/internetwache/GitTools.git > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print GitTools installation message
+  debug:
+    msg: "[GIT HUNTING] GitTools installation is done!"

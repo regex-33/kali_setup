@@ -1,0 +1,5 @@
+# defaults/main.yml for web_tools role
+
+web_tools_variable1: value1
+web_tools_variable2: value2
+# Add more variables as needed

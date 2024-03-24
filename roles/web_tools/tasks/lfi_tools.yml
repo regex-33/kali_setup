@@ -1,0 +1,19 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/lfi_tools"
+
+- name: Create directory for LFI Tools
+  file:
+    path: "{{ tools_directory }}"
+    state: directory
+
+- name: Install LFISuite
+  git:
+    repo: https://github.com/D35m0nd142/LFISuite.git
+    dest: "{{ tools_directory }}/LFISuite"
+  register: lfisuite_installed
+
+- name: Print status
+  debug:
+    msg: "LFISuite installed successfully!"
+  when: lfisuite_installed.changed

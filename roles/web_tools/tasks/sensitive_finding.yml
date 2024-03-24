@@ -1,0 +1,60 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/sensitive_finding"
+    trufflehog_version: "3.71.0"
+
+- name: Create directory for sensitive finding tools
+  file:
+    path: /opt/bug_bounty/sensitive_finding
+    state: directory
+
+- name: Change directory to sensitive finding tools
+  shell: cd /opt/bug_bounty/sensitive_finding
+
+- name: Install DumpsterDiver
+  shell: |
+    git clone https://github.com/securing/DumpsterDiver.git > /dev/null 2>&1
+    cd DumpsterDiver
+    pip3 install -r requirements.txt > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print DumpsterDiver installation message
+  debug:
+    msg: "[SENSITIVE FINDING TOOLS] DumpsterDiver installation is done!"
+
+- name: Install EarlyBird
+  shell: |
+    git clone https://github.com/americanexpress/earlybird.git > /dev/null 2>&1
+    cd earlybird
+    ./build.sh > /dev/null 2>&1
+    ./install.sh > /dev/null 2>&1
+  args:
+    chdir: "{{ tools_directory }}"
+  ignore_errors: yes
+
+- name: Print EarlyBird installation message
+  debug:
+    msg: "[SENSITIVE FINDING TOOLS] EarlyBird installation is done!"
+
+- name: Install Ripgrep
+  apt:
+    name: ripgrep
+    state: present
+  ignore_errors: yes
+
+- name: Print Ripgrep installation message
+  debug:
+    msg: "[SENSITIVE FINDING TOOLS] Ripgrep installation is done!"
+
+- name: Install Trufflehog
+  shell: |
+    wget https://github.com/trufflesecurity/trufflehog/releases/download/v{{ trufflehog_version }}/trufflehog_{{ trufflehog_version }}_linux_amd64.tar.gz -O /tmp/trufflehog.tar.gz > /dev/null 2>&1
+    tar -zxvf /tmp/trufflehog.tar.gz -C /tmp > /dev/null 2>&1
+    mv /tmp/trufflehog /usr/local/bin/trufflehog
+  ignore_errors: yes
+
+- name: Print Trufflehog installation message
+  debug:
+    msg: "[SENSITIVE FINDING TOOLS] Trufflehog installation is done!"

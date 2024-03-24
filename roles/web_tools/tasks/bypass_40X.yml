@@ -1,0 +1,24 @@
+---
+- set_fact:
+    tools_directory: "/opt/bug_bounty/bypass_404"
+
+- name: Create directory for Bypass 40X
+  ansible.builtin.file:
+    path: "{{ tools_directory }}"
+    state: directory
+
+- name: Install dontgo403
+  ansible.builtin.shell:
+    cmd: |
+      cd /tmp
+      wget https://github.com/devploit/dontgo403/releases/download/0.5/dontgo403_linux_amd64
+      chmod +x dontgo403_linux_amd64
+      mv dontgo403_linux_amd64 /usr/local/bin/dontgo403
+  args:
+    executable: /bin/bash
+  register: dontgo403_installed
+  changed_when: dontgo403_installed.rc == 0
+
+- name: Print status
+  ansible.builtin.debug:
+    msg: "{{ 'dontgo403 installed successfully!' if dontgo403_installed.changed else 'dontgo403 already installed' }}"
